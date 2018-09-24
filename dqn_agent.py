@@ -13,7 +13,7 @@ BATCH_SIZE = 64         # minibatch size
 GAMMA = 0.99            # discount factor
 TAU = 1e-3              # for soft update of target parameters
 LR = 5e-4               # learning rate 
-UPDATE_EVERY = 4        # how often to update the network
+UPDATE_EVERY = 1        # how often to update the network
 
 #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 device = torch.device('cuda')
@@ -56,7 +56,7 @@ class Agent():
                 experiences = self.memory.sample()
                 self.learn(experiences, GAMMA)
 
-    def act(self, state, eps=0.):
+    def act(self, state, eps=0):
         """Returns actions for given state as per current policy.
         
         Params
@@ -72,8 +72,8 @@ class Agent():
 
         # Epsilon-greedy action selection
         if random.random() > eps:
-            return np.argmax(action_values.cpu().data.numpy())
-        else:
+            return np.argmax(action_values.cpu().data.numpy()).astype(np.int32)            
+        else:            
             return random.choice(np.arange(self.action_size))
 
     def learn(self, experiences, gamma):
